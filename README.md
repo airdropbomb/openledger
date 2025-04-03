@@ -28,7 +28,7 @@ nano tokens.txt
 nano proxy.txt
 ```
 
-5. 5. Run the bot:
+5. Run the bot:
 ```
 node main.js
 ```
