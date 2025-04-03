@@ -16,7 +16,7 @@ async function checkBaseUrl() {
     return {
       endpoint: settings.BASE_URL,
       message:
-        "If the API changes, please contact the ForestArmy Telegram group (https://t.me/forestarmy) for more information and updates! | Have any issues? Please contact: https://t.me/forestarmy",
+        "If the API changes, please contact the Telegram group (https://t.me/airdropbombnode) for more information and updates! | Have any issues? Please contact: https://t.me/airdropbombnode",
     };
   }
 }
@@ -31,14 +31,14 @@ async function getBaseApi(url) {
       return {
         endpoint: null,
         message:
-          "If the API changes, please contact the ForestArmy Telegram group (https://t.me/forestarmy) for more information and updates! | Have any issues? Please contact: https://t.me/forestarmy",
+          "If the API changes, please contact Telegram group (https://t.me/airdropbombnode) for more information and updates! | Have any issues? Please contact: https://t.me/airdropbombnode",
       };
     }
   } catch (e) {
     return {
       endpoint: null,
       message:
-        "If the API changes, please contact the ForestArmy Telegram group (https://t.me/forestarmy) for more information and updates! | Have any issues? Please contact: https://t.me/forestarmy",
+        "If the API changes, please contact the Telegram group (https://t.me/airdropbombnode) for more information and updates! | Have any issues? Please contact: https://t.me/airdropbombnode",
     };
   }
 }
