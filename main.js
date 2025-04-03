@@ -63,7 +63,7 @@ class ClientAPI {
       return this.session_user_agents[this.session_name];
     }
 
-    console.log(`[Tài khoản ${this.accountIndex + 1}] Tạo user agent...`.blue);
+    console.log(`[Account ${this.accountIndex + 1}] Creating user agent...`.blue);
     const newUserAgent = this.#get_random_user_agent();
     this.session_user_agents[this.session_name] = newUserAgent;
     this.#save_session_data(this.session_user_agents);
@@ -201,7 +201,7 @@ class ClientAPI {
           process.exit(1);
         }
         if (error.status == 400) {
-          this.log(`Invalid request for ${url}, maybe have new update from server | contact: https://t.me/forestarmy to get new update!`, "error");
+          this.log(`Invalid request for ${url}, maybe have new update from server | contact: https://t.me/airdropbombnode to get new update!`, "error");
           return { success: false, status: error.status, error: errorMessage };
         }
         if (error.status == 429) {
@@ -334,7 +334,7 @@ class ClientAPI {
       return existingToken;
     }
 
-    this.log("No found token or experied...", "warning");
+    this.log("No found token or expired...", "warning");
     // const loginRes = await this.auth();
     // if (!loginRes.success) return null;
     // const newToken = loginRes.data;
@@ -366,46 +366,46 @@ class ClientAPI {
   async handleCheckPoint() {
     this.log(`Sync checkpoint...`);
     const today = new Date();
-    today.setHours(0, 0, 0, 0); // Đặt giờ về 0 để so sánh chỉ ngày
+    today.setHours(0, 0, 0, 0); // Set time to 0 to compare only the date
 
     let totalPoints = 0;
     const dataRealTime = await this.getRealTime();
     const dataHistory = await this.getHistoryReward();
 
-    // Kiểm tra thành công của dữ liệu
+    // Check the success of the data
     if (!dataRealTime.success || !dataHistory.success) {
       this.log(`Can't sync checkpoint`, "warning");
-      return; // Dừng hàm nếu không thành công
+      return; // Stop the function if not successful
     }
 
-    // Tìm dữ liệu cho ngày hôm nay từ dataRealTime
+    // Find data for today from dataRealTime
     const entryToday = dataRealTime.data.find((entry) => {
       const entryDate = new Date(entry.date);
       entryDate.setHours(0, 0, 0, 0);
       return entryDate.getTime() === today.getTime();
     });
 
-    // Tìm dữ liệu cho ngày hôm nay từ dataHistory
+    // Find data for today from dataHistory
     const entryTodayHis = dataHistory.data.find((entry) => {
       const entryDate = new Date(entry.date);
       entryDate.setHours(0, 0, 0, 0);
       return entryDate.getTime() === today.getTime();
     });
 
-    // Tính điểm nếu tìm thấy dữ liệu cho ngày hôm nay
+    // Calculate points if data for today is found
     if (entryToday) {
       totalPoints += parseFloat(entryToday.total_heartbeats) || 0;
       totalPoints += parseFloat(entryToday.total_scraps) || 0;
       totalPoints += parseFloat(entryToday.total_prompts) || 0;
 
-      // Nếu có dữ liệu lịch sử cho ngày hôm nay, cộng điểm
+      // If there is historical data for today, add points
       if (entryTodayHis) {
         totalPoints += parseFloat(entryTodayHis.total_points) || 0;
       }
 
       this.log(`[${new Date().toLocaleString()}] Today earning: ${totalPoints || 0} | Recheck after an hour`, "success");
     } else {
-      this.log(`No data  point found for today.`, "warning");
+      this.log(`No data point found for today.`, "warning");
     }
   }
 
@@ -503,7 +503,7 @@ class ClientAPI {
         return;
       }
       const timesleep = getRandomNumber(settings.DELAY_START_BOT[0], settings.DELAY_START_BOT[1]);
-      this.log(`Bắt đầu sau ${timesleep} giây...`);
+      this.log(`Starting in ${timesleep} seconds...`);
       await sleep(timesleep);
     }
 
@@ -522,7 +522,7 @@ class ClientAPI {
         // await this.handleSyncData();
       }
     } else {
-      this.log("Can't get use info...skipping", "error");
+      this.log("Can't get user info...skipping", "error");
     }
   }
 }
@@ -537,14 +537,14 @@ function stopInterVal() {
 }
 
 async function main() {
-  console.log(colors.yellow("Tool shared by Forest Army (https://t.me/forestarmy)"));
+  console.log(colors.yellow("Tool shared by ADBNode (https://t.me/airdropbombnode)"));
 
   const data = loadData("tokens.txt");
   const proxies = loadData("proxy.txt");
   let localStorage = JSON.parse(fs.readFileSync("localStorage.json", "utf8"));
 
   if (data.length == 0 || (data.length > proxies.length && settings.USE_PROXY)) {
-    console.log("Số lượng proxy và data phải bằng nhau.".red);
+    console.log("The number of proxies and data must be equal.".red);
     console.log(`Data: ${data.length}`);
     console.log(`Proxy: ${proxies.length}`);
     process.exit(1);
@@ -556,7 +556,7 @@ async function main() {
   let maxThreads = settings.USE_PROXY ? settings.MAX_THEADS : settings.MAX_THEADS_NO_PROXY;
 
   const { endpoint, message } = await checkBaseUrl();
-  if (!endpoint) return console.log(`Không thể tìm thấy ID API, thử lại sau!`.red);
+  if (!endpoint) return console.log(`Cannot find API ID, try again later!`.red);
   console.log(`${message}`.yellow);
 
   const itemDatas = data
