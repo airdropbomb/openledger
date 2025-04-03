@@ -30,37 +30,37 @@ function parseQueryString(query) {
 
 function splitIdPet(num) {
   const numStr = num.toString();
-  const firstPart = numStr.slice(0, 3); // Lấy 3 ký tự đầu tiên
-  const secondPart = numStr.slice(3); // Lấy phần còn lại
+  const firstPart = numStr.slice(0, 3); // Get the first 3 characters
+  const secondPart = numStr.slice(3); // Get the remaining part
 
   return [parseInt(firstPart), parseInt(secondPart)];
 }
 
-// Hàm để ghi đè biến môi trường
+// Function to override environment variables
 const envFilePath = path.join(__dirname, ".env");
 function updateEnv(variable, value) {
-  // Đọc file .env
+  // Read the .env file
   fs.readFile(envFilePath, "utf8", (err, data) => {
     if (err) {
-      console.log("Không thể đọc file .env:", err);
+      console.log("Cannot read .env file:", err);
       return;
     }
 
-    // Tạo hoặc cập nhật biến trong file
+    // Create or update the variable in the file
     const regex = new RegExp(`^${variable}=.*`, "m");
-    let newData = data.replace(regex, `${variable}=${value}`); // Sử dụng let thay vì const
+    let newData = data.replace(regex, `${variable}=${value}`); // Use let instead of const
 
-    // Kiểm tra nếu biến không tồn tại trong file, thêm vào cuối
+    // Check if the variable doesn’t exist in the file, append it to the end
     if (!regex.test(data)) {
       newData += `\n${variable}=${value}`;
     }
 
-    // Ghi lại file .env
+    // Write back to the .env file
     fs.writeFile(envFilePath, newData, "utf8", (err) => {
       if (err) {
-        console.error("Không thể ghi file .env:", err);
+        console.error("Cannot write to .env file:", err);
       } else {
-        // console.log(`Đã cập nhật ${variable} thành ${value}`);
+        // console.log(`Updated ${variable} to ${value}`);
       }
     });
   });
@@ -101,6 +101,7 @@ function getToken(id) {
   const tokens = JSON.parse(fs.readFileSync("tokens.json", "utf8"));
   return tokens[id] || null;
 }
+
 function isTokenExpired(token) {
   if (!token) return { isExpired: true, expirationDate: new Date().toLocaleString() };
 
@@ -122,10 +123,10 @@ function isTokenExpired(token) {
 
 function generateRandomHash() {
   const characters = "0123456789abcdef";
-  let hash = "0x"; // Bắt đầu bằng "0x"
+  let hash = "0x"; // Start with "0x"
 
   for (let i = 0; i < 64; i++) {
-    // 64 ký tự cho hash
+    // 64 characters for the hash
     const randomIndex = Math.floor(Math.random() * characters.length);
     hash += characters[randomIndex];
   }
@@ -146,12 +147,12 @@ function loadData(file) {
   try {
     const datas = fs.readFileSync(file, "utf8").replace(/\r/g, "").split("\n").filter(Boolean);
     if (datas?.length <= 0) {
-      console.log(colors.red(`Không tìm thấy dữ liệu ${file}`));
+      console.log(colors.red(`No data found in ${file}`));
       return [];
     }
     return datas;
   } catch (error) {
-    console.log(`Không tìm thấy file ${file}`.red);
+    console.log(`File ${file} not found`.red);
     return [];
   }
 }
@@ -209,8 +210,8 @@ function generateComplexId(length = 9) {
 }
 
 function getRandomNineDigitNumber() {
-  const min = 100000000; // Số 9 chữ số nhỏ nhất
-  const max = 999999999; // Số 9 chữ số lớn nhất
+  const min = 100000000; // Smallest 9-digit number
+  const max = 999999999; // Largest 9-digit number
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
