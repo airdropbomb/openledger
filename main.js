@@ -410,27 +410,40 @@ class ClientAPI {
   }
 
   async handleSyncData() {
-    this.log(`Sync data...`);
-    let userData = { success: true, data: null, status: 0 },
-      retries = 0;
+  this.log(`Sync data...`);
+  let userData = { success: false, data: null, status: 0 },
+    retries = 0;
 
+  try {
     do {
       userData = await this.getUserData();
       if (userData?.success) break;
       retries++;
     } while (retries < 1 && userData.status !== 400);
-    if (userData.success) {
-      const balanceData = await this.getBalance();
-      const { referral_code } = userData.data;
-      // const wokerData = await this.getWokers();
 
+    if (userData && userData.success) {
+      const balanceData = await this.getBalance();
+
+      if (!balanceData || !balanceData.success || !balanceData.data) {
+        this.log("Failed to get balance data...skipping", "warning");
+        return { success: false };
+      }
+
+      const { referral_code } = userData.data;
       const { name, point, totalPoint, endDate } = balanceData.data;
       this.log(`Ref code: ${referral_code} | Point ${name}: ${point} | Total points: ${totalPoint} | End date ${name}: ${endDate}`, "custom");
+
+      return userData;
     } else {
-      return this.log("Can't sync new data...skipping", "warning");
+      this.log("Can't sync new data...skipping", "warning");
+      return { success: false };
     }
-    return userData;
+  } catch (err) {
+    this.log(`Unexpected error during sync: ${err.message}`, "error");
+    return { success: false };
   }
+}
+
 
   async handleCreateDevice() {
     // const res = await this.getWokers();
@@ -510,7 +523,7 @@ class ClientAPI {
     const token = await this.getValidToken();
     if (!token) return;
     const userData = await this.handleSyncData();
-    if (userData.success) {
+if (userData && userData.success) {
       // await this.handleCheckin();
       // await sleep(1);
       await this.handleCheckPoint();
